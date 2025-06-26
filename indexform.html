@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario</title>
+  <link rel="stylesheet" type="text/css" href="estilos2.css">
+
+</head>
+<body>
+
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="que es.html">¿Qué es una reacción química?</a></li>
+        <li><a href="presencia.html">Presencia de las reacciones químicas</a></li>
+        <li><a href="tipos.html">Tipos de reacciones químicas</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="form-container">
+      <h2>Formulario</h2>
+      <h5>Nos interesa saber tu opinón sobre la información compartida para saber si fue de ayuda para ti.</h5>
+
+      <form id="neonForm">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required>
+
+        <label for="edad">Edad:</label>
+        <input type="number" id="edad" name="edad" required>
+
+        <label for="nivel">Nivel de estudio:</label>
+        <select id="nivel" name="nivel" required>
+          <option value="">--Selecciona--</option>
+          <option value="Primaria">Primaria</option>
+          <option value="Secundaria">Secundaria</option>
+          <option value="Preparatoria">Preparatoria</option>
+          <option value="Universidad">Universidad</option>
+        </select>
+
+        <label for="correo">Correo electrónico:</label>
+        <input type="email" id="correo" name="correo" required>
+
+        <label for="mensaje">Mensaje:</label>
+        <h5>¿Qué opinas sobre la información presentada?</h5>
+        <textarea id="mensaje" name="mensaje" rows="3" required></textarea>
+
+        <label for="contacto">Número de contacto:</label>
+        <input type="tel" id="contacto" name="contacto" required>
+
+        <label>Califica la información:</label>
+        <div class="rating" id="rating">
+          <span class="star" data-value="1">★</span>
+          <span class="star" data-value="2">★</span>
+          <span class="star" data-value="3">★</span>
+          <span class="star" data-value="4">★</span>
+          <span class="star" data-value="5">★</span>
+        </div>
+
+        <button type="submit">Enviar</button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 | Proyecto educativo | Fernanda A. G.</p>
+  </footer>
+
+<script>
+  const form = document.getElementById("neonForm");
+  const stars = document.querySelectorAll(".star");
+  let puntuacion = 0;
+
+  stars.forEach(star => {
+    star.addEventListener("click", () => {
+      puntuacion = star.getAttribute("data-value");
+      stars.forEach(s => s.classList.remove("selected"));
+      for (let i = 0; i < puntuacion; i++) {
+        stars[i].classList.add("selected");
+      }
+    });
+  });
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const datos = {
+      nombre: form.nombre.value,
+      edad: form.edad.value,
+      nivel: form.nivel.value,
+      correo: form.correo.value,
+      mensaje: form.mensaje.value,
+      contacto: form.contacto.value,
+      puntuacion: puntuacion
+    };
+
+    fetch("https://script.google.com/macros/s/AKfycbw3voG62l9kYEfAiHXu5mGkIF_EjJFWL2fk0FrSPIgUrySWTnHBdN50IJF30UkCAWwfGQ/exec", {
+      method: "POST",
+      body: JSON.stringify(datos),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then(res => res.text())
+    .then(respuesta => {
+      alert("¡Gracias por enviar tus datos! 🌟");
+      form.reset();
+      stars.forEach(s => s.classList.remove("selected"));
+      puntuacion = 0;
+    })
+    .catch(err => {
+      alert("Error al guardar los datos 😓");
+      console.error(err);
+    });
+  });
+</script>
+
+
+</body>
+</html>
